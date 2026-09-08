@@ -382,6 +382,19 @@ def test_view_replacement_is_detached_persistent_and_not_semantic(store, tmp_pat
     assert reset == {"view": {**board["view"], "zoom": 0.2}, "view_revision": 2}
 
 
+def test_view_save_rejects_a_stale_cross_client_revision(store):
+    board = store.create("owner", nodes=[node()])
+    first = store.save_view(board["id"], "owner", {"zoom": 1.2}, view_revision=0)
+    assert first["view_revision"] == 1
+
+    with pytest.raises(api.BoardError) as caught:
+        store.save_view(board["id"], "owner", {"zoom": 0.8}, view_revision=0)
+
+    assert caught.value.code == "view_revision_conflict"
+    assert caught.value.status == 409
+    assert store.get(board["id"], "owner")["view"] == first["view"]
+
+
 def test_invalid_views_are_atomic(store):
     board = store.create("owner", nodes=[node()])
     bad_views = [

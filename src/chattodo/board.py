@@ -586,9 +586,17 @@ class BoardStore:
             change = self._change(connection, board, json.loads(target["nodes"]), "user", undo=True)
             return self._receipt(connection, board, request_id, fingerprint, change)
 
-    def save_view(self, board_id: str, owner: str, view: dict) -> dict:
+    def save_view(self, board_id: str, owner: str, view: dict, view_revision: int | None = None) -> dict:
+        """Save presentation state, optionally using its independent CAS revision.
+
+        ``view_revision`` stays optional for older direct Python callers.
+        Concurrent client adapters should always provide it.
+        """
         with self._transaction() as connection:
             board = self._get(connection, board_id, owner)
+            if view_revision is not None and _revision(view_revision) != board["view_revision"]:
+                raise BoardError("view_revision_conflict",
+                                 "Board view changed; reload it before explicitly retrying.", 409)
             view = _view(view, board["nodes"])
             if view != board["view"]:
                 board["view_revision"] += 1
