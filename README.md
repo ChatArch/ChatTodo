@@ -1,65 +1,45 @@
-<div align="center">
-    <a href="https://pypi.python.org/pypi/ChatTodo">
-        <img src="https://img.shields.io/pypi/v/ChatTodo.svg" alt="PyPI version" />
-    </a>
-    <a href="https://github.com/ChatArch/ChatTodo/actions/workflows/ci.yml">
-        <img src="https://github.com/ChatArch/ChatTodo/actions/workflows/ci.yml/badge.svg" alt="Tests" />
-    </a>
-    <a href="https://arch.gh.wzhecnu.cn/ChatTodo/">
-        <img src="https://img.shields.io/badge/docs-mkdocs-blue.svg" alt="Documentation" />
-    </a>
-</div>
-
-<div align="center">
-
-[英文版](README.en.md) | [简体中文](README.md)
-</div>
-
 # ChatTodo
 
-ChatArch ChatTodo package placeholder; product features are not implemented yet.
+ChatTodo 提供有序任务树、原子变更、SQLite 持久化、版本冲突检测和撤销能力，供 ChatSite 任务树工作台及其他 Python 程序调用。
 
+> 当前分支为 `0.1.0.dev0` 开发构建。PyPI 的 `0.0.1` 是历史占位包，不包含此 API；部署时使用相应开发源码／构建制品，不把占位包当成可用领域层。
 
-文档入口：<https://arch.gh.wzhecnu.cn/ChatTodo/>
+## Python API
 
-按场景选择文档：
+```python
+from chatenv import get_paths
+from chattodo.board import BoardStore
 
-| 场景 | 文档 |
-| --- | --- |
-| 第一次安装、运行命令行、确认包可用 | [CLI 树](docs/cli-tree.md) |
-| 校对当前包有哪些一等能力和边界 | [能力地图](docs/capability-map.md) |
-| 从 Python 代码调用包能力 | [接口树](docs/interface-tree.md) |
+store = BoardStore(get_paths().home_dir / "chattodo" / "boards.sqlite3")
+board = store.create("example-user", title="项目计划")
+root = board["nodes"][0]["id"]
+result = store.mutate(
+    board["id"], "example-user", board["revision"], "create-first-task",
+    [{"op": "create", "node": {
+        "id": "first-task", "parent_id": root,
+        "title": "明确需求", "body": "## 目标\n明确交付范围。",
+    }}],
+)
+print(result["change"]["counts"])
+```
 
-## 快速开始
+- `validate_nodes` / `apply_operations`：纯函数校验与变更，不修改调用者输入。
+- `BoardStore.create/list/get/mutate/undo/save_view/history/delete`：持久化接口。
+- 稳定节点 ID、四种任务状态、Markdown 正文、父子关系和兄弟排序。
+- 修改批次原子应用；旧 revision 冲突；同一 request_id 幂等且绑定原始内容。
+- 视图坐标／缩放／折叠状态与语义 revision 分离。
+- SQLite 专用目录与文件私有，拒绝危险链接／特殊文件；owner 间隔离。
+
+浏览器页面、登录、同源 API、模型调用与站点部署属于 **ChatSite**，不在 ChatTodo 中重复实现 Web 服务。模型配置不属于此领域包。
+
+## 开发验证
 
 ```bash
-pip install -e ".[dev]"
-chattodo --help
+python -m pytest -q
 chattodo --version
 chattodo --tree
 chattodo --tree-brief
-python -m pytest -q
 python -m build
 ```
 
-## 命令行规范
-
-这个模板默认依赖 `chatstyle>=0.2.0,<0.3.0` 和 `chatenv>=0.2.11,<0.3.0`，新增命令应优先使用：
-
-- `add_tree_option()` 提供共享的 `--tree` / `--tree-brief`，`render_click_tree()` 从已注册 Click 元数据生成命令树。
-- `CommandSchema` / `CommandField` 描述输入。
-- `add_interactive_option()` 提供统一 `-i/-I`。
-- `resolve_command_inputs()` 统一缺参补问、默认值、TTY 与校验。
-- 默认生成 `config.py` 和 `chatenv.configs` 入口点，使包可被 ChatEnv 发现；只有明确不需要 ChatEnv 接入时才使用 `--without-chatenv-provider`。
-
-## 目录结构
-
-- `src/`：包源码
-- `tests/code-tests/`：代码测试和历史测试迁移
-- `tests/cli-tests/`：真实 CLI 测试，doc-first
-- `tests/mock-cli-tests/`：mock/fake CLI 测试，doc-first
-- `docs/`：长期维护文档，由 mkdocs 构建
-
-## 开发说明
-
-扩展脚手架前，先阅读 `DEVELOP.md` 和 `AGENTS.md`。
+当前 CLI 保留标准根选项；领域能力以 Python API 提供，不伪造尚不存在的业务命令。
