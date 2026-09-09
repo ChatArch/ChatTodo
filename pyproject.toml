@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ChatTodo"
 dynamic = ["version"]
-description = "ChatArch ChatTodo package placeholder; product features are not implemented yet."
+description = "Validated persistent task trees and atomic operations for collaborative planning."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

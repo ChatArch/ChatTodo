@@ -1,35 +1,26 @@
 # Capability Map
 
-Use this page to check which first-class capabilities `ChatTodo` currently owns, which ones are verified, and what remains out of scope for this package.
+| Capability | Interface | Boundary |
+|---|---|---|
+| Ordered task forests | `validate_nodes` | Multiple roots, stable IDs, parent links and sibling order |
+| Atomic semantic changes | `apply_operations` / `BoardStore.mutate` | create/update/move/delete, validated before commit |
+| Persistence and ownership | `BoardStore` | Caller supplies a trusted owner; not a login system |
+| Concurrency and replay | `revision` / `request_id` | Stale versions rejected; request ID binds complete input |
+| Independent view state | `save_view` / `view_revision` | Concurrent clients supply the read version |
+| Audit and recovery | `history` / `undo` | Actual receipts and node snapshots, no fabricated no-op changes |
 
-## Capability Groups
+## Node contract
 
-<div class="grid cards" markdown>
+`id / parent_id / title / status / body / order`. Roots have null parents. Markdown bodies may be empty. Status is `pending / in_progress / completed / cancelled`.
 
-- **CLI Entry**
+Limits: 2000 nodes, 64 levels, 50 operations per batch. Titles are non-empty and at most 200 characters; bodies at most 128 KiB. Unknown fields, duplicate IDs, cycles, orphans and invalid types are rejected.
 
-    `chattodo --help`, `chattodo --version`, `chattodo --tree`, and `chattodo --tree-brief` are the default verification entry points.
+## Safety and recovery
 
-- **Python API**
+- Validation precedes commit; failures leave no partial updates. Deletion requires confirmation.
+- Ambiguous network failure does not imply a failed write. Replay the same original request ID and complete input.
+- Receipts and audit entries have bounded retention, not a permanent external ledger. Undo snapshots are separate.
+- SQLite paths use private directories/files; use SQLite backup APIs for online databases.
+- Integrations preserve board/node IDs and maintain their own external identity mappings.
 
-    Substantive behavior should live in importable Python functions, classes, or service layers rather than only in Click callbacks.
-
-- **Config and Environment**
-
-    ChatEnv integration is enabled by default; stable, shared configuration belongs in `config.py`.
-
-</div>
-
-## Current Boundary
-
-| Capability | Status | Notes |
-| --- | --- | --- |
-| CLI base entry | Implemented | The template generates a Click group, `--version`, shared ChatStyle tree options, and base tests. |
-| ChatEnv provider | Implemented | The template generates `config.py` and a `chatenv.configs` entry point. |
-| Business commands | Not implemented | Add these from the real package domain; do not fake future commands in the template. |
-
-## Out of Scope
-
-- No plan placeholder page is generated.
-- No unimplemented capability should be written as a user operation tutorial.
-- No secret, token, cookie, or Authorization header should appear in README, docs, issues, PR comments, or CI logs.
+ChatSite owns login, models, browser conversations and cross-database deletion cleanup. `BoardStore.delete` alone does not clean ChatSite's conversation database.

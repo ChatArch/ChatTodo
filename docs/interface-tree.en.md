@@ -1,18 +1,18 @@
-# Python 接口树
+# Python API
 
 ```text
 chattodo.board
 ├── BoardError          # code / message / status
-├── validate_nodes      # 验证并规范化任务森林
-├── apply_operations    # 纯函数原子操作预览
-└── BoardStore          # SQLite 领域存储
+├── validate_nodes      # Validate and normalize a forest
+├── apply_operations    # Pure atomic-operation preview
+└── BoardStore          # SQLite persistence
     ├── create / list / get
     ├── mutate / undo / history
     ├── save_view
     └── delete
 ```
 
-## 最小示例
+## Minimal example
 
 ```python
 from uuid import uuid4
@@ -20,12 +20,12 @@ from chatenv import get_paths
 from chattodo.board import BoardStore
 
 store = BoardStore(get_paths().home_dir / "chattodo" / "boards.sqlite3")
-owner = "example-user"  # 接入方已验证的身份
-board = store.create(owner, title="项目构思")
+owner = "example-user"  # identity verified by the integrating service
+board = store.create(owner, title="Project ideas")
 root = board["nodes"][0]["id"]
 result = store.mutate(board["id"], owner, board["revision"], uuid4().hex, [
     {"op": "create", "node": {"id": uuid4().hex, "parent_id": root,
-     "title": "一个方向", "body": "", "status": "pending", "order": 0}}
+     "title": "One direction", "body": "", "status": "pending", "order": 0}}
 ])
 current = store.get(board["id"], owner)
 current["view"]["pan"]["x"] = 24
@@ -33,11 +33,11 @@ store.save_view(current["id"], owner, current["view"],
                 view_revision=current["view_revision"])
 ```
 
-## 持久化接口
+## Store methods
 
-| 方法 | 参数 |
+| Method | Parameters |
 |---|---|
-| `create` | `owner, title="我的任务树", nodes=None` |
+| `create` | `owner, title=<default title>, nodes=None` |
 | `list` | `owner` |
 | `get` / `history` | `board_id, owner` |
 | `mutate` | `board_id, owner, revision, request_id, operations, *, actor="user", confirm_destructive=False` |
@@ -45,6 +45,6 @@ store.save_view(current["id"], owner, current["view"],
 | `save_view` | `board_id, owner, view, view_revision=None` |
 | `delete` | `board_id, owner, revision, *, confirm=False` |
 
-`mutate` 和 `undo` 返回画布与变更回执；`get` 返回独立的语义及视图版本。`save_view` 可选版本参数兼容旧的进程内调用，并发客户端必须传入读取时版本。通过 `BoardError` 的结构化字段处理错误。
+`mutate` and `undo` return the board and change receipt. `get` includes separate semantic and view revisions. The optional view version supports older in-process callers; concurrent clients must always supply the read version. Handle errors through `BoardError`'s structured fields.
 
-不要让不可信浏览器输入决定 owner，不要通过 SQL 绕过验证和版本。
+Do not let untrusted browser input choose the owner or bypass validation through SQL.

@@ -1,35 +1,26 @@
 # 能力地图
 
-这个页面用于校对 `ChatTodo` 当前有哪些一等能力、哪些能力已经验证，以及哪些事情不属于当前包。
+| 领域能力 | 接口 | 边界 |
+|---|---|---|
+| 有序任务森林 | `validate_nodes` | 多根、稳定 ID、父子关系、同级顺序 |
+| 原子语义变更 | `apply_operations` / `BoardStore.mutate` | create/update/move/delete，整批验证后保存 |
+| 持久化与身份隔离 | `BoardStore` | 调用者传入可信 owner，不是登录系统 |
+| 并发与幂等 | `revision` / `request_id` | 旧版本拒绝，同一 ID 绑定同一完整输入 |
+| 独立视图状态 | `save_view` / `view_revision` | 并发客户端传读取时版本，防止静默覆盖 |
+| 审计与恢复 | `history` / `undo` | 实际变更回执和节点快照，无变化不伪造变更 |
 
-## 能力分组
+## 节点契约
 
-<div class="grid cards" markdown>
+`id / parent_id / title / status / body / order`。根的 `parent_id` 为 null，正文为可留空的 Markdown。状态为 `pending / in_progress / completed / cancelled`。
 
-- **命令行入口**
+最多 2000 节点、64 层、每批 50 操作；标题非空且最多 200 字符，正文最多 128 KiB。拒绝未知字段、重复 ID、环、孤儿和非法类型。
 
-    `chattodo --help`、`chattodo --version`、`chattodo --tree` 和 `chattodo --tree-brief` 是默认可验证入口。
+## 安全与恢复
 
-- **Python 接口**
+- 验证后提交，失败不留下部分更新；删除需明确确认。
+- 未知网络结果不代表写入失败；重放必须保留原请求 ID 和完整输入。
+- 幂等回执及审计记录有保留窗口，不是永久外部账本；撤销快照与该窗口分开维护。
+- SQLite 使用私有目录／文件；在线备份使用 SQLite backup API。
+- 接入方保留画布和节点 ID，并维护自己的外部身份映射。
 
-    实质能力应放到可 import 的 Python 函数、类或 service 层，而不是只写在 Click 回调里。
-
-- **配置与环境**
-
-    默认接入 ChatEnv；长期、常用、跨命令共享的配置放入 `config.py`。
-
-</div>
-
-## 当前边界
-
-| 能力 | 状态 | 说明 |
-| --- | --- | --- |
-| 命令行基础入口 | 已实现 | 模板生成 Click group、`--version`、ChatStyle 共享树选项和基础测试。 |
-| ChatEnv 配置提供者 | 已实现 | 默认生成 `config.py` 和 `chatenv.configs` 入口点。 |
-| 业务命令 | 未实现 | 按当前包真实需求补充，不能在模板里伪造未来命令。 |
-
-## 不在当前范围
-
-- 不生成计划类占位页。
-- 不把未实现能力写成用户可执行教程。
-- 不在 README、docs、issue、PR 评论或 CI log 中输出 secret、token、cookie 或 Authorization header。
+登录、模型、浏览器对话及跨数据库删除清理由 ChatSite 管理。直接调用 `BoardStore.delete` 不会清理 ChatSite 的会话数据库。
