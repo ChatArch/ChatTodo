@@ -2,7 +2,11 @@
 
 ChatTodo provides ordered task forests, validated atomic operations, SQLite persistence, optimistic revisions, idempotency and undo for the ChatSite task workbench and Python callers.
 
-This branch is a **0.1.0.dev0 development build**. The historical PyPI 0.0.1 placeholder does not contain these APIs. Install the corresponding development source or built artifact when integrating this feature.
+Install with `pip install "ChatTodo>=0.1.0,<0.2.0"`.
+
+Documentation: https://arch.gh.wzhecnu.cn/ChatTodo/en/
+
+For the complete Web workbench, install `ChatSite[todo]`. ChatTodo is a domain library, not a Web server.
 
 ```python
 from chatenv import get_paths

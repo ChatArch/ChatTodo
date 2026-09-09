@@ -2,7 +2,11 @@
 
 ChatTodo 提供有序任务树、原子变更、SQLite 持久化、版本冲突检测和撤销能力，供 ChatSite 任务树工作台及其他 Python 程序调用。
 
-> 当前分支为 `0.1.0.dev0` 开发构建。PyPI 的 `0.0.1` 是历史占位包，不包含此 API；部署时使用相应开发源码／构建制品，不把占位包当成可用领域层。
+安装：`pip install "ChatTodo>=0.1.0,<0.2.0"`。
+
+文档：https://arch.gh.wzhecnu.cn/ChatTodo/
+
+完整网页请安装 `ChatSite[todo]`；ChatTodo 本身是领域库，不启动 Web 服务。
 
 ## Python API
 

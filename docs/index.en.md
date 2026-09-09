@@ -1,60 +1,40 @@
-# ChatTodo Docs
+# ChatTodo
 
-ChatTodo is a ChatArch Python package. This documentation site should hold long-lived usage notes, a command map, a capability map, and Python interface entry points. After scaffolding, replace placeholders with behavior that is actually implemented, explored, or planned for this package.
-
-Site entry: <https://arch.gh.wzhecnu.cn/ChatTodo/en/>
-
-## Choose Documentation by Scenario
-
-| Scenario | Document |
-| --- | --- |
-| Install the package, run the CLI, and confirm it works | [CLI Tree](cli-tree.md) |
-| Check first-class capabilities and current boundaries | [Capability Map](capability-map.md) |
-| Call package behavior directly from Python | [Python Interface Tree](interface-tree.md) |
-
-## Documentation Organization
-
-This template keeps only durable documentation entry points; it does not generate a plan placeholder:
-
-- **CLI tree**: the most direct command entry point, including the real command tree, status, and update checklist.
-- **Capability map**: first-class capabilities, boundaries, and out-of-scope areas.
-- **Interface tree**: importable Python APIs behind the CLI.
-
-## Primary Entry Points
+A **Python task-forest domain library** for planning and brainstorming. Human and model proposals share the same validated, atomically persisted node data.
 
 <div class="grid cards" markdown>
 
-- **CLI Tree**
+- **Python integration**
 
-    Start from the CLI entry point and record implemented commands, command status, and interactive conventions.
+    Use the [Python API](interface-tree.md) to create boards, mutate nodes and save views.
 
-    [Open CLI Tree](cli-tree.md)
+- **Data boundaries**
 
-- **Capability Map**
+    The [capability map](capability-map.md) explains nodes, revisions, owners, idempotency and undo.
 
-    Review current package boundaries and avoid presenting planned work as implemented behavior.
+- **Real commands**
 
-    [Open Capability Map](capability-map.md)
+    The [CLI tree](cli-tree.md) lists registered root options. Business operations are Python APIs.
 
-- **Python Interface Tree**
+- **Complete Web workbench**
 
-    Keep the CLI thin and put substantive behavior in importable Python APIs.
-
-    [Open Interface Tree](interface-tree.md)
+    [ChatSite Todo](https://arch.gh.wzhecnu.cn/ChatSite/en/todo-workbench/) provides login, multiple canvases, Markdown and model collaboration.
 
 </div>
 
-## Documentation Status
-
-- **Implemented**: code, tests, or CLI routes exist.
-- **Verified**: covered by local smoke, CI, or real-service practice.
-- **Not implemented**: keep as boundary and planning notes only; turn into operation docs after implementation and validation.
-
-## Local Preview
+## Install
 
 ```bash
-python -m pip install -e ".[docs]"
-mkdocs serve
+pip install "ChatTodo>=0.1.0,<0.2.0"
+chattodo --version
+chattodo --tree
 ```
 
-The Chinese home page is available at <https://arch.gh.wzhecnu.cn/ChatTodo/>. Topic pages without English translations fall back to the default Chinese content through the i18n plugin.
+| Goal | Interface |
+|---|---|
+| Brainstorm with titles alone | Leave node `body` empty |
+| Persist tasks in a backend | `BoardStore` |
+| Preview or validate mutations | `validate_nodes` / `apply_operations` |
+| Browser and model collaboration | Install `ChatSite[todo]` |
+
+ChatTodo does not own login, HTTP, model calls or external execution. Discussion is not evidence that a task has been implemented.
