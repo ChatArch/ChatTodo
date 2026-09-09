@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/capability-map/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/capability-map/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/capability-map/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/cli-tree/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/cli-tree/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/cli-tree/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/interface-tree/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/interface-tree/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/interface-tree/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/en/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/en/capability-map/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/capability-map/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/capability-map/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/en/cli-tree/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/cli-tree/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/cli-tree/"/>
+    </url>
+    <url>
+        <loc>https://arch.gh.wzhecnu.cn/ChatTodo/en/interface-tree/</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://arch.gh.wzhecnu.cn/ChatTodo/en/interface-tree/"/>
+        <xhtml:link rel="alternate" hreflang="zh" href="https://arch.gh.wzhecnu.cn/ChatTodo/interface-tree/"/>
+    </url>
+</urlset>
